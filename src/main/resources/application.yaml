@@ -1,7 +1,19 @@
+server:
+  port: 8080
+
 spring:
-  application:
-    name: ecommerce
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce
+    username: postgres
+    password: yigit123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+app:
+  jwt:
+    secret: s+XEqR8I1uKykfy2cuOP3ypK9b04YosPX8J5bfB1KbzA=
+    access-token-expiration: 900000
+    refresh-token-expiration: 604800000
+
