@@ -15,7 +15,13 @@ public final class ApiResponse<T> {
     private final Map<String, String> errors;
     private final Instant timestamp;
 
-    private ApiResponse(boolean success, HttpStatus status, String message, T data, Map<String, String> errors) {
+    private ApiResponse(
+            boolean success,
+            HttpStatus status,
+            String message,
+            T data,
+            Map<String, String> errors
+    ) {
         this.success = success;
         this.status = status.value();
         this.message = message;
@@ -40,12 +46,14 @@ public final class ApiResponse<T> {
 
     /* ---------------------- ERROR ---------------------- */
 
+    /** Generic error without field-level errors */
     public static <T> ApiResponse<T> error(String message, HttpStatus status) {
         return new ApiResponse<>(false, status, message, null, null);
     }
 
+    /** Validation errors → always return 422 */
     public static <T> ApiResponse<T> validationError(Map<String, String> errors) {
-        return new ApiResponse<>(false, HttpStatus.BAD_REQUEST, "Validation failed", null, errors);
+        return new ApiResponse<>(false, HttpStatus.UNPROCESSABLE_ENTITY, "Validation failed", null, errors);
     }
 
     /* ---------------------- GETTERS ---------------------- */
