@@ -34,8 +34,11 @@ public class SecurityConfig {
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().denyAll()
+                        .requestMatchers("/api/auth/login",
+                                        "/api/auth/register",
+                                        "/api/auth/refresh").permitAll()
+                        .anyRequest().authenticated()
+
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 

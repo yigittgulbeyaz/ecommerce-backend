@@ -1,5 +1,6 @@
 package com.yigit.ecommerce.security.jwt;
 
+import com.yigit.ecommerce.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +27,8 @@ public class JwtService {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
+    /* ---------------------- TOKEN GENERATION ---------------------- */
+
     public String generateAccessToken(Long userId, String role) {
         return generateToken(userId, role, accessTokenExpiration);
     }
@@ -49,6 +52,8 @@ public class JwtService {
                 .compact();
     }
 
+    /* ---------------------- BASIC VALIDATION ---------------------- */
+
     public boolean isTokenValid(String token) {
         try {
             extractClaims(token);
@@ -64,5 +69,29 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    /* ---------------------- REFRESH TOKEN METHODS ---------------------- */
+    public void validateRefreshToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            throw new InvalidTokenException("Refresh token expired.");
+        } catch (Exception e) {
+            throw new InvalidTokenException("Invalid refresh token.");
+        }
+    }
+
+    public Long extractUserIdFromToken(String token) {
+        Claims claims = extractClaims(token);
+        return Long.valueOf(claims.getSubject());
+    }
+
+    public String extractRoleFromToken(String token) {
+        Claims claims = extractClaims(token);
+        return claims.get("role", String.class);
     }
 }

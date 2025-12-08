@@ -92,7 +92,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public RefreshTokenResponse refreshToken(String refreshToken) {
 
-        //Todo
-        return null;
+        jwtService.validateRefreshToken(refreshToken);
+
+        Long userId = jwtService.extractUserIdFromToken(refreshToken);
+        String role = jwtService.extractRoleFromToken(refreshToken);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found."));
+
+        String newAccessToken = jwtService.generateAccessToken(user.getId(), role);
+        String newRefreshToken = jwtService.generateRefreshToken(user.getId(), role);
+
+        return new RefreshTokenResponse(
+                newAccessToken,
+                newRefreshToken,
+                "Bearer"
+        );
     }
 }
+
