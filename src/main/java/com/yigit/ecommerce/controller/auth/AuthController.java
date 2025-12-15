@@ -1,4 +1,4 @@
-package com.yigit.ecommerce.controller;
+package com.yigit.ecommerce.controller.auth;
 
 import com.yigit.ecommerce.common.ApiResponse;
 import com.yigit.ecommerce.dto.request.auth.LoginRequest;
