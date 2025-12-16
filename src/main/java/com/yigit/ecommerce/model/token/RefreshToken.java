@@ -3,43 +3,61 @@ package com.yigit.ecommerce.model.token;
 import com.yigit.ecommerce.model.user.User;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.UUID;
 
 @Entity
-@Table(name = "refresh_tokens")
+@Table(name = "refresh_tokens",
+        indexes = {
+                @Index(name = "idx_refresh_token_hash", columnList = "tokenHash", unique = true),
+                @Index(name = "idx_refresh_user", columnList = "user_id")
+        }
+)
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @Column(nullable = false, unique = true, length = 64)
+    private String tokenHash;
 
-    private LocalDateTime expiresAt;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public RefreshToken() {}
+    @Column(nullable = false)
+    private Instant expiresAt;
 
-    public RefreshToken(Long id, String token, LocalDateTime expiresAt, User user) {
-        this.id = id;
-        this.token = token;
-        this.expiresAt = expiresAt;
-        this.user = user;
-    }
+    @Column(nullable = false)
+    private boolean revoked = false;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    private Instant revokedAt;
 
-    public String getToken() { return token; }
-    public void setToken(String token) { this.token = token; }
+    private UUID replacedBy;
 
-    public LocalDateTime getExpiresAt() { return expiresAt; }
-    public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
+    @Column(nullable = false, updatable = false)
+    private Instant createdAt = Instant.now();
+
+    public UUID getId() { return id; }
+
+    public String getTokenHash() { return tokenHash; }
+    public void setTokenHash(String tokenHash) { this.tokenHash = tokenHash; }
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public Instant getExpiresAt() { return expiresAt; }
+    public void setExpiresAt(Instant expiresAt) { this.expiresAt = expiresAt; }
+
+    public boolean isRevoked() { return revoked; }
+    public void setRevoked(boolean revoked) { this.revoked = revoked; }
+
+    public Instant getRevokedAt() { return revokedAt; }
+    public void setRevokedAt(Instant revokedAt) { this.revokedAt = revokedAt; }
+
+    public UUID getReplacedBy() { return replacedBy; }
+    public void setReplacedBy(UUID replacedBy) { this.replacedBy = replacedBy; }
+
+    public Instant getCreatedAt() { return createdAt; }
 }
