@@ -44,6 +44,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/admin/categories/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/categories/*").hasRole("ADMIN")
 
+                        /* ---------- PRODUCT (PUBLIC) ---------- */
+                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/products/*").permitAll()
+
+                        /* ---------- ADMIN PRODUCT (ADMIN ONLY) ---------- */
+                        .requestMatchers(HttpMethod.POST, "/api/admin/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/admin/products/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/admin/products/*").hasRole("ADMIN")
+
                         /* ---------- DEFAULT ---------- */
                         .anyRequest().denyAll()
                 )
