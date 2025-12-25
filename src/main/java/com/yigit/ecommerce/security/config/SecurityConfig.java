@@ -67,6 +67,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/carts/users/*/clear").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/carts/users/*").hasRole("ADMIN")
 
+                        /* ---------- USER (AUTH REQUIRED) ---------- */
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/me").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/users/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/me/change-password").authenticated()
+
+                        /* ---------- ADMIN USER (ADMIN ONLY) ---------- */
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/users").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/users/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/users/*/role").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/users/*").hasRole("ADMIN")
+
                         /* ---------- DEFAULT ---------- */
                         .anyRequest().denyAll()
                 )
