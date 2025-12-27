@@ -13,16 +13,19 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private int quantity;
 
+    // sipariş anındaki birim fiyat (snapshot)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal price;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     public OrderItem() {}
