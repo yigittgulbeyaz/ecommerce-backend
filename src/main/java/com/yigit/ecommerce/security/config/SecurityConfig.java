@@ -78,7 +78,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/users/*/role").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/users/*").hasRole("ADMIN")
 
-                        /* ---------- DEFAULT ---------- */
+                        /* ---------- ORDER (USER AUTH REQUIRED) ---------- */
+                        .requestMatchers(HttpMethod.POST, "/api/v1/orders").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/orders/*").authenticated()
+
+                        /* ---------- ADMIN ORDER (ADMIN ONLY) ---------- */
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/orders").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/orders/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/orders/*/status").hasRole("ADMIN")
+
+                                /* ---------- DEFAULT ---------- */
                         .anyRequest().denyAll()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
