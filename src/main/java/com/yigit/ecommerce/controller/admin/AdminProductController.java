@@ -6,6 +6,8 @@ import com.yigit.ecommerce.dto.request.product.ProductUpdateRequest;
 import com.yigit.ecommerce.dto.response.product.ProductResponse;
 import com.yigit.ecommerce.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,21 +21,23 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public ApiResponse<ProductResponse> create(@Valid @RequestBody ProductCreateRequest request) {
-        return ApiResponse.created(productService.create(request), "Product created");
+    public ResponseEntity<ApiResponse<ProductResponse>> create(@Valid @RequestBody ProductCreateRequest request) {
+        ProductResponse response = productService.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.created(response, "Product created"));
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<ProductResponse> update(
+    public ResponseEntity<ApiResponse<ProductResponse>> update(
             @PathVariable Long id,
-            @Valid @RequestBody ProductUpdateRequest request
-    ) {
-        return ApiResponse.success(productService.update(id, request), "Product updated");
+            @Valid @RequestBody ProductUpdateRequest request) {
+        ProductResponse response = productService.update(id, request);
+        return ResponseEntity.ok(ApiResponse.success(response, "Product updated"));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         productService.delete(id);
-        return ApiResponse.success("Product deleted");
+        return ResponseEntity.ok(ApiResponse.success("Product deleted"));
     }
 }

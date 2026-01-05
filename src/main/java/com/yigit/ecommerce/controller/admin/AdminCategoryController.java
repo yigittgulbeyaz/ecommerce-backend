@@ -6,6 +6,8 @@ import com.yigit.ecommerce.dto.request.category.CategoryUpdateRequest;
 import com.yigit.ecommerce.dto.response.category.CategoryResponse;
 import com.yigit.ecommerce.service.CategoryService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,22 +21,23 @@ public class AdminCategoryController {
     }
 
     @PostMapping
-    public ApiResponse<CategoryResponse> create(@Valid @RequestBody CategoryCreateRequest request) {
+    public ResponseEntity<ApiResponse<CategoryResponse>> create(@Valid @RequestBody CategoryCreateRequest request) {
         CategoryResponse created = categoryService.create(request);
-        return ApiResponse.created(created, "Category created");
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.created(created, "Category created"));
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<CategoryResponse> update(
+    public ResponseEntity<ApiResponse<CategoryResponse>> update(
             @PathVariable Long id,
-            @Valid @RequestBody CategoryUpdateRequest request
-    ) {
-        return ApiResponse.success(categoryService.update(id, request), "Category updated");
+            @Valid @RequestBody CategoryUpdateRequest request) {
+        CategoryResponse response = categoryService.update(id, request);
+        return ResponseEntity.ok(ApiResponse.success(response, "Category updated"));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         categoryService.delete(id);
-        return ApiResponse.success("Category deleted");
+        return ResponseEntity.ok(ApiResponse.success("Category deleted"));
     }
 }

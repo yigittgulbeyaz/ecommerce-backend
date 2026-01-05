@@ -7,6 +7,7 @@ import com.yigit.ecommerce.dto.response.product.ProductResponse;
 import com.yigit.ecommerce.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,17 +21,17 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ProductResponse> getById(@PathVariable Long id) {
-        return ApiResponse.success(productService.getById(id), "Product fetched");
+    public ResponseEntity<ApiResponse<ProductResponse>> getById(@PathVariable Long id) {
+        ProductResponse response = productService.getById(id);
+        return ResponseEntity.ok(ApiResponse.success(response, "Product fetched"));
     }
 
     @GetMapping
-    public ApiResponse<PageResponse<ProductResponse>> getAll(
+    public ResponseEntity<ApiResponse<PageResponse<ProductResponse>>> getAll(
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String search,
-            Pageable pageable
-    ) {
+            Pageable pageable) {
         Page<ProductResponse> page = productService.getAll(categoryId, search, pageable);
-        return ApiResponse.success(PageMapper.toResponse(page), "Products listed");
+        return ResponseEntity.ok(ApiResponse.success(PageMapper.toResponse(page), "Products listed"));
     }
 }

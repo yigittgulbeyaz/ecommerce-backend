@@ -3,6 +3,7 @@ package com.yigit.ecommerce.controller.category;
 import com.yigit.ecommerce.common.ApiResponse;
 import com.yigit.ecommerce.dto.response.category.CategoryResponse;
 import com.yigit.ecommerce.service.CategoryService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,12 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ApiResponse<List<CategoryResponse>> getAll() {
-        return ApiResponse.success(categoryService.getAll(), "Categories fetched");
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getAll() {
+        return ResponseEntity.ok(ApiResponse.success(categoryService.getAll(), "Categories fetched"));
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<CategoryResponse> getById(@PathVariable Long id) {
-        return ApiResponse.success(categoryService.getById(id), "Category fetched");
+    public ResponseEntity<ApiResponse<CategoryResponse>> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(categoryService.getById(id), "Category fetched"));
     }
 }
