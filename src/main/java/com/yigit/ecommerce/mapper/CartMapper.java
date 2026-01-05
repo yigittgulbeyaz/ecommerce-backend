@@ -16,47 +16,48 @@ public final class CartMapper {
     }
 
     public static CartResponse toResponse(Cart cart) {
-        if (cart == null) return null;
-
-        CartResponse response = new CartResponse();
-        response.setCartId(cart.getId());
+        if (cart == null)
+            return null;
 
         List<CartItemResponse> itemResponses = new ArrayList<>();
+        double total = 0.0;
 
         if (cart.getItems() != null) {
             for (CartItem item : cart.getItems()) {
                 CartItemResponse itemResponse = toItemResponse(item);
                 if (itemResponse != null) {
                     itemResponses.add(itemResponse);
+                    total += itemResponse.lineTotal();
                 }
             }
         }
 
-        response.setItems(itemResponses);
-
-        response.setTotal(0.0);
-
-        return response;
+        return new CartResponse(cart.getId(), itemResponses, total);
     }
 
     public static CartItemResponse toItemResponse(CartItem item) {
-        if (item == null) return null;
+        if (item == null)
+            return null;
 
-        CartItemResponse r = new CartItemResponse();
-        r.setQuantity(item.getQuantity());
+        Long productId = null;
+        String productName = null;
+        double unitPrice = 0.0;
 
         Product p = item.getProduct();
         if (p != null) {
-            r.setProductId(p.getId());
-            r.setProductName(p.getName());
+            productId = p.getId();
+            productName = p.getName();
             BigDecimal price = p.getPrice();
-            r.setUnitPrice(price != null ? price.doubleValue() : 0.0);
-        } else {
-            r.setUnitPrice(0.0);
+            unitPrice = price != null ? price.doubleValue() : 0.0;
         }
 
-        r.setLineTotal(0.0);
+        double lineTotal = unitPrice * item.getQuantity();
 
-        return r;
+        return new CartItemResponse(
+                productId,
+                productName,
+                item.getQuantity(),
+                unitPrice,
+                lineTotal);
     }
 }

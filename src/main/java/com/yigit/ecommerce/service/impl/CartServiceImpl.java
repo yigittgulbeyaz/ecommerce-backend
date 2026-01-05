@@ -35,10 +35,10 @@ public class CartServiceImpl implements CartService {
     private final AuthenticationContext authenticationContext;
 
     public CartServiceImpl(CartRepository cartRepository,
-                           CartItemRepository cartItemRepository,
-                           ProductRepository productRepository,
-                           UserRepository userRepository,
-                           AuthenticationContext authenticationContext) {
+            CartItemRepository cartItemRepository,
+            ProductRepository productRepository,
+            UserRepository userRepository,
+            AuthenticationContext authenticationContext) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
@@ -50,16 +50,16 @@ public class CartServiceImpl implements CartService {
     public CartResponse getMyCart() {
         User user = getCurrentUser();
         Cart cart = getOrCreateCart(user);
-        return buildCartResponse(cart);
+        return CartMapper.toResponse(cart);
     }
 
     @Override
     public CartResponse addItem(AddCartItemRequest request) {
-        validateQuantity(request.getQuantity());
+        validateQuantity(request.quantity());
 
         User user = getCurrentUser();
         Cart cart = getOrCreateCart(user);
-        Product product = getProductOrThrow(request.getProductId());
+        Product product = getProductOrThrow(request.productId());
 
         try {
             CartItem item = cartItemRepository.findByCartAndProduct(cart, product)
@@ -71,14 +71,14 @@ public class CartServiceImpl implements CartService {
                         return ci;
                     });
 
-            item.setQuantity(item.getQuantity() + request.getQuantity());
+            item.setQuantity(item.getQuantity() + request.quantity());
             cartItemRepository.save(item);
 
             if (cart.getItems() != null && !cart.getItems().contains(item)) {
                 cart.getItems().add(item);
             }
 
-            return buildCartResponse(cart);
+            return CartMapper.toResponse(cart);
 
         } catch (DataIntegrityViolationException e) {
             throw new ConflictException("Cart item conflict occurred. Please try again.");
@@ -87,17 +87,17 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponse updateQuantity(Long productId, UpdateCartItemQuantityRequest request) {
-        validateQuantity(request.getQuantity());
+        validateQuantity(request.quantity());
 
         User user = getCurrentUser();
         Cart cart = getCartOrThrow(user);
         Product product = getProductOrThrow(productId);
         CartItem item = getCartItemOrThrow(cart, product, productId);
 
-        item.setQuantity(request.getQuantity());
+        item.setQuantity(request.quantity());
         cartItemRepository.save(item);
 
-        return buildCartResponse(cart);
+        return CartMapper.toResponse(cart);
     }
 
     @Override
@@ -110,12 +110,10 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.delete(item);
 
         if (cart.getItems() != null) {
-            cart.getItems().removeIf(ci ->
-                    ci.getProduct() != null && ci.getProduct().getId().equals(productId)
-            );
+            cart.getItems().removeIf(ci -> ci.getProduct() != null && ci.getProduct().getId().equals(productId));
         }
 
-        return buildCartResponse(cart);
+        return CartMapper.toResponse(cart);
     }
 
     @Override
@@ -129,27 +127,10 @@ public class CartServiceImpl implements CartService {
             cart.getItems().clear();
         }
 
-        return buildCartResponse(cart);
+        return CartMapper.toResponse(cart);
     }
 
     // ===== helpers =====
-
-    private CartResponse buildCartResponse(Cart cart) {
-        CartResponse response = CartMapper.toResponse(cart);
-
-        double total = 0.0;
-
-        if (response.getItems() != null) {
-            for (CartItemResponse item : response.getItems()) {
-                double lineTotal = item.getUnitPrice() * item.getQuantity();
-                item.setLineTotal(lineTotal);
-                total += lineTotal;
-            }
-        }
-
-        response.setTotal(total);
-        return response;
-    }
 
     private void validateQuantity(int quantity) {
         if (quantity < 1) {

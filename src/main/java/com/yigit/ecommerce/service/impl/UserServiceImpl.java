@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository,
-                           AuthenticationContext authenticationContext,
-                           PasswordEncoder passwordEncoder) {
+            AuthenticationContext authenticationContext,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.authenticationContext = authenticationContext;
         this.passwordEncoder = passwordEncoder;
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
         User u = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found: " + userId));
 
-        u.setName(request.getName());
+        u.setName(request.name());
         return UserMapper.toResponse(u);
     }
 
@@ -59,10 +59,10 @@ public class UserServiceImpl implements UserService {
         User u = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found: " + userId));
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), u.getPassword())) {
+        if (!passwordEncoder.matches(request.currentPassword(), u.getPassword())) {
             throw new UnauthorizedException("Current password is incorrect");
         }
 
-        u.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        u.setPassword(passwordEncoder.encode(request.newPassword()));
     }
 }

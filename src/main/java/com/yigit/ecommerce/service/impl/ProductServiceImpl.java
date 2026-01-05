@@ -23,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
 
     public ProductServiceImpl(ProductRepository productRepository,
-                              CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -31,13 +31,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductResponse create(ProductCreateRequest request) {
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found: " + request.getCategoryId()));
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found: " + request.categoryId()));
 
         Product p = new Product();
-        p.setName(request.getName());
-        p.setDescription(request.getDescription());
-        p.setPrice(request.getPrice());
+        p.setName(request.name());
+        p.setDescription(request.description());
+        p.setPrice(request.price());
         p.setCategory(category);
 
         return ProductMapper.toResponse(productRepository.save(p));
@@ -75,12 +75,12 @@ public class ProductServiceImpl implements ProductService {
         Product p = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found: " + id));
 
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found: " + request.getCategoryId()));
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found: " + request.categoryId()));
 
-        p.setName(request.getName());
-        p.setDescription(request.getDescription());
-        p.setPrice(request.getPrice());
+        p.setName(request.name());
+        p.setDescription(request.description());
+        p.setPrice(request.price());
         p.setCategory(category);
 
         return ProductMapper.toResponse(productRepository.save(p));

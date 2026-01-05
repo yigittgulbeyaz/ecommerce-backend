@@ -44,7 +44,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         Order o = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Order not found: " + id));
 
-        o.setStatus(request.getStatus());
+        o.setStatus(request.status());
         return OrderMapper.toResponse(o);
     }
 }

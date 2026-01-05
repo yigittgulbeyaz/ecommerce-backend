@@ -10,35 +10,33 @@ import java.util.List;
 
 public final class OrderMapper {
 
-    private OrderMapper() {}
+    private OrderMapper() {
+    }
 
     public static OrderResponse toResponse(Order o) {
-        if (o == null) return null;
-
-        OrderResponse r = new OrderResponse();
-        r.setId(o.getId());
-        r.setTotalPrice(o.getTotalPrice());
-        r.setStatus(o.getStatus());
-        r.setCreatedAt(o.getCreatedAt());
+        if (o == null)
+            return null;
 
         List<OrderItemResponse> items = o.getItems() == null ? List.of()
                 : o.getItems().stream().map(OrderMapper::toItemResponse).toList();
 
-        r.setItems(items);
-        return r;
+        return new OrderResponse(
+                o.getId(),
+                o.getTotalPrice(),
+                o.getStatus(),
+                o.getCreatedAt(),
+                items);
     }
 
     private static OrderItemResponse toItemResponse(OrderItem it) {
-        OrderItemResponse r = new OrderItemResponse();
-        r.setId(it.getId());
-        r.setProductId(it.getProduct().getId());
-        r.setProductName(it.getProduct().getName());
-        r.setUnitPrice(it.getPrice());
-        r.setQuantity(it.getQuantity());
-
         BigDecimal lineTotal = it.getPrice().multiply(BigDecimal.valueOf(it.getQuantity()));
-        r.setLineTotal(lineTotal);
 
-        return r;
+        return new OrderItemResponse(
+                it.getId(),
+                it.getProduct().getId(),
+                it.getProduct().getName(),
+                it.getPrice(),
+                it.getQuantity(),
+                lineTotal);
     }
 }

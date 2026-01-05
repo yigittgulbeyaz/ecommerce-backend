@@ -22,8 +22,8 @@ public class AdminCartServiceImpl implements AdminCartService {
     private final UserRepository userRepository;
 
     public AdminCartServiceImpl(CartRepository cartRepository,
-                                CartItemRepository cartItemRepository,
-                                UserRepository userRepository) {
+            CartItemRepository cartItemRepository,
+            UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
@@ -36,7 +36,7 @@ public class AdminCartServiceImpl implements AdminCartService {
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() -> new NotFoundException("Cart not found for user: " + userId));
 
-        return buildCartResponse(cart);
+        return CartMapper.toResponse(cart);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class AdminCartServiceImpl implements AdminCartService {
             cart.getItems().clear();
         }
 
-        return buildCartResponse(cart);
+        return CartMapper.toResponse(cart);
     }
 
     @Override
@@ -61,27 +61,8 @@ public class AdminCartServiceImpl implements AdminCartService {
         cartRepository.deleteByUser(user);
     }
 
-    // ===== helpers =====
-
     private User getUserOrThrow(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found: " + userId));
-    }
-
-    private CartResponse buildCartResponse(Cart cart) {
-        CartResponse response = CartMapper.toResponse(cart);
-
-        double total = 0.0;
-
-        if (response.getItems() != null) {
-            for (CartItemResponse item : response.getItems()) {
-                double lineTotal = item.getUnitPrice() * item.getQuantity();
-                item.setLineTotal(lineTotal);
-                total += lineTotal;
-            }
-        }
-
-        response.setTotal(total);
-        return response;
     }
 }

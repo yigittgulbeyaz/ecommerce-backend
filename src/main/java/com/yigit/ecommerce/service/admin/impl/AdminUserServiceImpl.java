@@ -45,7 +45,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         User u = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found: " + id));
 
-        u.setRole(request.getRole());
+        u.setRole(request.role());
         return UserMapper.toResponse(u);
     }
 

@@ -6,22 +6,28 @@ import com.yigit.ecommerce.model.product.Product;
 
 public final class ProductMapper {
 
-    private ProductMapper() {}
+    private ProductMapper() {
+    }
 
     public static ProductResponse toResponse(Product p) {
-        if (p == null) return null;
-
-        ProductResponse r = new ProductResponse();
-        r.setId(p.getId());
-        r.setName(p.getName());
-        r.setDescription(p.getDescription());
-        r.setPrice(p.getPrice());
+        if (p == null)
+            return null;
 
         Category c = p.getCategory();
+        Long categoryId = null;
+        String categoryName = null;
+
         if (c != null) {
-            r.setCategoryId(c.getId());
-            r.setCategoryName(c.getName());
+            categoryId = c.getId();
+            categoryName = c.getName();
         }
-        return r;
+
+        return new ProductResponse(
+                p.getId(),
+                p.getName(),
+                p.getDescription(),
+                p.getPrice(),
+                categoryId,
+                categoryName);
     }
 }
