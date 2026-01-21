@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/categories/*").permitAll()
 
-                        /* ---------- ADMIN CATEGORY (ADMIN ONLY) ---------- */
+                        /* ---------- ADMIN CATEGORY ---------- */
                         .requestMatchers(HttpMethod.POST, "/api/admin/categories").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/admin/categories/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/categories/*").hasRole("ADMIN")
@@ -50,45 +50,52 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/*").permitAll()
 
-                        /* ---------- ADMIN PRODUCT (ADMIN ONLY) ---------- */
+                        /* ---------- ADMIN PRODUCT ---------- */
                         .requestMatchers(HttpMethod.POST, "/api/admin/products").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/admin/products/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/products/*").hasRole("ADMIN")
 
-                        /* ---------- CART (USER AUTH REQUIRED) ---------- */
+                        /* ---------- CART (AUTH REQUIRED) ---------- */
                         .requestMatchers(HttpMethod.GET, "/api/v1/cart").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/cart/items").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/cart/items/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/cart/items/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/cart/clear").authenticated()
 
-                        /* ---------- ADMIN CART (ADMIN ONLY) ---------- */
+                        /* ---------- ADMIN CART ---------- */
                         .requestMatchers(HttpMethod.GET, "/api/v1/admin/carts/users/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/carts/users/*/clear").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/carts/users/*").hasRole("ADMIN")
 
-                        /* ---------- USER (AUTH REQUIRED) ---------- */
+                        /* ---------- ADDRESS (AUTH REQUIRED) ---------- */
+                        .requestMatchers(HttpMethod.POST, "/api/v1/addresses").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/addresses").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/addresses/*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/addresses/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/addresses/*").authenticated()
+
+                        /* ---------- USER ---------- */
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/me").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/users/me").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/me/change-password").authenticated()
 
-                        /* ---------- ADMIN USER (ADMIN ONLY) ---------- */
+                        /* ---------- ADMIN USER ---------- */
                         .requestMatchers(HttpMethod.GET, "/api/v1/admin/users").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/admin/users/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/users/*/role").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/users/*").hasRole("ADMIN")
 
-                        /* ---------- ORDER (USER AUTH REQUIRED) ---------- */
+                        /* ---------- ORDER ---------- */
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/v1/orders/*").authenticated()
 
-                        /* ---------- ADMIN ORDER (ADMIN ONLY) ---------- */
+                        /* ---------- ADMIN ORDER ---------- */
                         .requestMatchers(HttpMethod.GET, "/api/v1/admin/orders").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/v1/admin/orders/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/orders/*/status").hasRole("ADMIN")
 
-                                /* ---------- DEFAULT ---------- */
+                        /* ---------- DEFAULT ---------- */
                         .anyRequest().denyAll()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
