@@ -1,6 +1,9 @@
 package com.yigit.ecommerce.security.context;
 
+import com.yigit.ecommerce.exception.NotFoundException;
 import com.yigit.ecommerce.exception.UnauthorizedException;
+import com.yigit.ecommerce.model.user.User;
+import com.yigit.ecommerce.repository.UserRepository;
 import com.yigit.ecommerce.security.user.CustomUserDetails;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +15,12 @@ import java.util.Optional;
 @Component
 public class AuthenticationContext {
 
+    private final UserRepository userRepository;
+
+    public AuthenticationContext(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public Optional<CustomUserDetails> getPrincipal() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
@@ -20,7 +29,9 @@ public class AuthenticationContext {
         }
 
         Object principal = auth.getPrincipal();
-        return (principal instanceof CustomUserDetails cud) ? Optional.of(cud) : Optional.empty();
+        return (principal instanceof CustomUserDetails cud)
+                ? Optional.of(cud)
+                : Optional.empty();
     }
 
     public CustomUserDetails requirePrincipal() {
@@ -34,5 +45,11 @@ public class AuthenticationContext {
 
     public String requireEmail() {
         return requirePrincipal().getUsername();
+    }
+
+    public User requireUser() {
+        Long userId = requireUserId();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found: " + userId));
     }
 }

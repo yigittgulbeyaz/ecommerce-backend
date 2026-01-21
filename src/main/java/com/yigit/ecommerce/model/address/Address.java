@@ -1,24 +1,40 @@
 package com.yigit.ecommerce.model.address;
+
+import com.yigit.ecommerce.dto.request.address.AddressCreateRequest;
+import com.yigit.ecommerce.dto.request.address.AddressUpdateRequest;
 import com.yigit.ecommerce.model.user.User;
 import jakarta.persistence.*;
+
 @Entity
 @Table(name = "addresses")
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title; // Ev, İş vb.
+
+    private String title;
     private String addressLine;
     private String city;
     private String district;
     private String zipCode;
     private String country;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
     public Address() {
     }
-    public Address(Long id, String title, String addressLine, String city, String district, String zipCode, String country, User user) {
+
+    public Address(Long id,
+                   String title,
+                   String addressLine,
+                   String city,
+                   String district,
+                   String zipCode,
+                   String country,
+                   User user) {
         this.id = id;
         this.title = title;
         this.addressLine = addressLine;
@@ -28,6 +44,7 @@ public class Address {
         this.country = country;
         this.user = user;
     }
+
 
     public Long getId() {
         return id;
@@ -91,5 +108,31 @@ public class Address {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+
+    public static Address create(AddressCreateRequest request, User user) {
+        Address address = new Address();
+        address.title = request.title();
+        address.addressLine = request.addressLine();
+        address.city = request.city();
+        address.district = request.district();
+        address.zipCode = request.zipCode();
+        address.country = request.country();
+        address.user = user;
+        return address;
+    }
+
+    public void update(AddressUpdateRequest request) {
+        this.title = request.title();
+        this.addressLine = request.addressLine();
+        this.city = request.city();
+        this.district = request.district();
+        this.zipCode = request.zipCode();
+        this.country = request.country();
+    }
+
+    public boolean isOwnedBy(Long userId) {
+        return user != null && user.getId().equals(userId);
     }
 }
