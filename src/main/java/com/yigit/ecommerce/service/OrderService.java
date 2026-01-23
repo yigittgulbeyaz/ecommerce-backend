@@ -1,14 +1,15 @@
 package com.yigit.ecommerce.service;
 
+import com.yigit.ecommerce.dto.request.order.CheckoutRequest;
 import com.yigit.ecommerce.dto.response.order.OrderResponse;
 
 import java.util.List;
 
 public interface OrderService {
 
-    OrderResponse checkout();// cart -> order
+    OrderResponse checkout(CheckoutRequest request);
 
-    List<OrderResponse> getMyOrders();   // me orders
+    List<OrderResponse> getMyOrders();
 
-    OrderResponse getMyOrder(Long id);   // me order detail
+    OrderResponse getMyOrder(Long id);
 }

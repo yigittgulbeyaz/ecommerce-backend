@@ -29,12 +29,29 @@ public class Order {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    /* ===================== ADDRESS SNAPSHOT ===================== */
+
+    private String shippingAddressTitle;
+    private String shippingAddressLine;
+    private String shippingAddressCity;
+    private String shippingAddressDistrict;
+    private String shippingAddressZipCode;
+    private String shippingAddressCountry;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items;
 
-    public Order() {}
+    public Order() {
+    }
 
-    public Order(Long id, User user, BigDecimal totalPrice, OrderStatus status, LocalDateTime createdAt, List<OrderItem> items) {
+    public Order(
+            Long id,
+            User user,
+            BigDecimal totalPrice,
+            OrderStatus status,
+            LocalDateTime createdAt,
+            List<OrderItem> items
+    ) {
         this.id = id;
         this.user = user;
         this.totalPrice = totalPrice;
@@ -43,28 +60,118 @@ public class Order {
         this.items = items;
     }
 
+    /* ===================== JPA CALLBACKS ===================== */
+
     @PrePersist
     public void prePersist() {
-        if (createdAt == null) createdAt = LocalDateTime.now();
-        if (status == null) status = OrderStatus.PENDING;
-        if (totalPrice == null) totalPrice = BigDecimal.ZERO;
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = OrderStatus.PENDING;
+        }
+        if (totalPrice == null) {
+            totalPrice = BigDecimal.ZERO;
+        }
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    /* ===================== GETTERS & SETTERS ===================== */
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public Long getId() {
+        return id;
+    }
 
-    public BigDecimal getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(BigDecimal totalPrice) { this.totalPrice = totalPrice; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public OrderStatus getStatus() { return status; }
-    public void setStatus(OrderStatus status) { this.status = status; }
+    public User getUser() {
+        return user;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    public List<OrderItem> getItems() { return items; }
-    public void setItems(List<OrderItem> items) { this.items = items; }
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
+
+    /* ===================== SNAPSHOT GETTERS & SETTERS ===================== */
+
+    public String getShippingAddressTitle() {
+        return shippingAddressTitle;
+    }
+
+    public void setShippingAddressTitle(String shippingAddressTitle) {
+        this.shippingAddressTitle = shippingAddressTitle;
+    }
+
+    public String getShippingAddressLine() {
+        return shippingAddressLine;
+    }
+
+    public void setShippingAddressLine(String shippingAddressLine) {
+        this.shippingAddressLine = shippingAddressLine;
+    }
+
+    public String getShippingAddressCity() {
+        return shippingAddressCity;
+    }
+
+    public void setShippingAddressCity(String shippingAddressCity) {
+        this.shippingAddressCity = shippingAddressCity;
+    }
+
+    public String getShippingAddressDistrict() {
+        return shippingAddressDistrict;
+    }
+
+    public void setShippingAddressDistrict(String shippingAddressDistrict) {
+        this.shippingAddressDistrict = shippingAddressDistrict;
+    }
+
+    public String getShippingAddressZipCode() {
+        return shippingAddressZipCode;
+    }
+
+    public void setShippingAddressZipCode(String shippingAddressZipCode) {
+        this.shippingAddressZipCode = shippingAddressZipCode;
+    }
+
+    public String getShippingAddressCountry() {
+        return shippingAddressCountry;
+    }
+
+    public void setShippingAddressCountry(String shippingAddressCountry) {
+        this.shippingAddressCountry = shippingAddressCountry;
+    }
 }
