@@ -33,27 +33,27 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         /* ---------- AUTH (PUBLIC) ---------- */
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/refresh").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh").permitAll()
 
                         /* ---------- CATEGORY (PUBLIC) ---------- */
-                        .requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/*").permitAll()
 
                         /* ---------- ADMIN CATEGORY ---------- */
-                        .requestMatchers(HttpMethod.POST, "/api/admin/categories").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/admin/categories/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/admin/categories/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/admin/categories").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/admin/categories/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/categories/*").hasRole("ADMIN")
 
                         /* ---------- PRODUCT (PUBLIC) ---------- */
-                        .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/products/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/*").permitAll()
 
                         /* ---------- ADMIN PRODUCT ---------- */
-                        .requestMatchers(HttpMethod.POST, "/api/admin/products").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/admin/products/*").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/admin/products/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/admin/products").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/admin/products/*").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/admin/products/*").hasRole("ADMIN")
 
                         /* ---------- CART (AUTH REQUIRED) ---------- */
                         .requestMatchers(HttpMethod.GET, "/api/v1/cart").authenticated()
