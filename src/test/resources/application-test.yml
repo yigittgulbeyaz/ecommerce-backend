@@ -9,7 +9,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
 app:
   jwt:
     secret: test_secret_key_should_be_long_enough_for_256_bits_test_test
-    expiration: 3600000 # 1 saat
+    access-token-expiration: 3600000
+    refresh-token-expiration: 86400000
