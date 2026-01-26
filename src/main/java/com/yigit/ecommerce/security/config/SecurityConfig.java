@@ -32,6 +32,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        /* ---------- SWAGGER / OPENAPI (PUBLIC) ---------- */
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/api-docs.yaml").permitAll()
+
                         /* ---------- AUTH (PUBLIC) ---------- */
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
@@ -96,8 +102,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/orders/*/status").hasRole("ADMIN")
 
                         /* ---------- DEFAULT ---------- */
-                        .anyRequest().denyAll()
-                )
+                        .anyRequest().denyAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -28,11 +28,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.equals("/swagger-ui.html");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
-            @NonNull FilterChain chain
-    ) throws ServletException, IOException {
+            @NonNull FilterChain chain) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
@@ -54,16 +61,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         CustomUserDetails userDetails = userDetailsService.loadUserById(userId);
 
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                null,
+                userDetails.getAuthorities());
 
         authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
+                new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
