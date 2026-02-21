@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:env}
+    active: ${SPRING_PROFILES_ACTIVE:env,dev}
 
   config:
     import: optional:file:.env[.properties]
