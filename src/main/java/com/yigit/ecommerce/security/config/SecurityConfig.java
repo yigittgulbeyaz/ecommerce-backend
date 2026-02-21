@@ -101,6 +101,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/admin/orders/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/admin/orders/*/status").hasRole("ADMIN")
 
+                        /* ---------- ADMIN STATS ---------- */
+                        .requestMatchers(HttpMethod.GET, "/api/v1/admin/stats").hasRole("ADMIN")
+
                         /* ---------- DEFAULT ---------- */
                         .anyRequest().denyAll())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
