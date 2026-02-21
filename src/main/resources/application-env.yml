@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/ecommerce
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5433/ecommerce}
+    username: ${POSTGRES_USER:ecommerce}
+    password: ${POSTGRES_PASSWORD:}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -18,3 +18,6 @@ app:
     secret: ${JWT_SECRET}
     access-token-expiration: 900000
     refresh-token-expiration: 604800000
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}

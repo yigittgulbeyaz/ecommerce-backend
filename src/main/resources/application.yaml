@@ -1,12 +1,12 @@
 spring:
   profiles:
-    active: env, dev
+    active: ${SPRING_PROFILES_ACTIVE:env}
 
   config:
     import: optional:file:.env[.properties]
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 # SpringDoc OpenAPI Configuration
 springdoc:
@@ -18,8 +18,8 @@ springdoc:
     enabled: true
     operationsSorter: method
 
-# Debug logging for troubleshooting
+# Logging
 logging:
   level:
-    org.springdoc: DEBUG
-    org.springframework.web: DEBUG
+    org.springdoc: INFO
+    org.springframework.web: INFO
