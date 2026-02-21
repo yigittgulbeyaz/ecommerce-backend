@@ -1,0 +1,23 @@
+/* ═══════════════════════════════════════════════════════════════
+   PAGE LAYOUT STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+.app-layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: var(--space-8);
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: var(--space-4);
+    }
+}
